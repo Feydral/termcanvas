@@ -432,9 +432,7 @@ pub fn get_voronoi_2d(seed: i32, x: f32, y: f32) -> f32 {
             let cy_ = yi + cy;
 
             let hx = hash(
-                seed as u32
-                    ^ cx_.wrapping_mul(PRIME_X) as u32
-                    ^ cy_.wrapping_mul(PRIME_Y) as u32,
+                seed as u32 ^ cx_.wrapping_mul(PRIME_X) as u32 ^ cy_.wrapping_mul(PRIME_Y) as u32,
             );
             let hy = hash(hx ^ 0xdeadbeef);
 
@@ -451,7 +449,7 @@ pub fn get_voronoi_2d(seed: i32, x: f32, y: f32) -> f32 {
         }
     }
 
-    min_dist.sqrt() * 2.0 * 1.4142135 - 1.0
+    min_dist.min(1.0)
 }
 
 pub fn get_voronoi_3d(seed: i32, x: f32, y: f32, z: f32) -> f32 {
@@ -493,7 +491,7 @@ pub fn get_voronoi_3d(seed: i32, x: f32, y: f32, z: f32) -> f32 {
         }
     }
 
-    min_dist.sqrt() * 2.0 * 1.7320508 - 1.0
+    min_dist.min(1.0)
 }
 
 pub fn fbm_voronoi_2d(
@@ -517,5 +515,5 @@ pub fn fbm_voronoi_2d(
         freq *= lacunarity;
     }
 
-    value / amplitude_sum
+    (value / amplitude_sum).min(1.0)
 }

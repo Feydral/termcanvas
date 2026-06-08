@@ -4,7 +4,11 @@ mod math;
 
 use crossterm::event::KeyCode;
 
-use crate::{canvas::{Canvas, draw::Align, font::Font}, input::Input, math::mathi};
+use crate::{
+    canvas::{Canvas, draw::Align, font::Font},
+    input::Input,
+    math::{mathi, noise},
+};
 
 fn main() {
     let mut canvas = Canvas::new();
@@ -38,45 +42,39 @@ fn main() {
             fps = (1.0 / dt) as u32;
         }
 
-        let blue = mathi::rgb_to_u32(127, 127, 255);
-        let gray = mathi::rgb_to_u32(127, 127, 127);
-
         canvas.clear();
 
-        canvas.draw(&font)
+        for x in 0..canvas.width() {
+            for y in 0..canvas.height() {
+                let scale = 0.03;
+                let color = noise::get_voronoi_2d(2, x as f32 * scale, y as f32 * scale) * 255.0;
+                canvas.set_pixel(
+                    x,
+                    y,
+                    mathi::rgb_to_u32(color as u8, color as u8, color as u8),
+                );
+            }
+        }
+
+        let blue = mathi::rgb_to_u32(127, 127, 255);
+        let red = mathi::rgb_to_u32(255, 127, 127);
+
+        canvas
+            .draw(&font)
             .at(5, 5)
-            .color(gray)
+            .color(red)
             .align(Align::Left)
-            .text("Hello, world!");
-
-        canvas.draw(&font)
-            .at(11, 15)
-            .color(gray)
-            .align(Align::Right)
-            .int(3, false);
-
-        canvas.draw(&font)
-            .at(11, 25)
-            .color(gray)
-            .align(Align::Right)
-            .int(-7, false);
+            .text("Voronoi Noise Test");
 
         let x = canvas.width().saturating_sub(5);
         let y = canvas.height().saturating_sub(13);
 
-        canvas.draw(&font)
+        canvas
+            .draw(&font)
             .at(x, y)
             .color(blue)
             .align(Align::Right)
             .uint(fps);
-
-        let y = canvas.height().saturating_sub(23);
-
-        canvas.draw(&font)
-            .at(x, y)
-            .color(blue)
-            .align(Align::Right)
-            .float(dt, 5, false);
 
         canvas.render();
     }

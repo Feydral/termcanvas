@@ -2,13 +2,21 @@
 
 use glam::{Vec2, Vec3, Vec4};
 
-/// Tests if a point p is inside the triangle defined by points a, b, and c. 
-/// If the point is inside the triangle, it also calculates the barycentric weights 
-/// for each vertex of the triangle and returns them through the weight_a, weight_b, 
-/// and weight_c parameters. The function returns true if the point is inside the triangle 
+/// Tests if a point p is inside the triangle defined by points a, b, and c.
+/// If the point is inside the triangle, it also calculates the barycentric weights
+/// for each vertex of the triangle and returns them through the weight_a, weight_b,
+/// and weight_c parameters. The function returns true if the point is inside the triangle
 /// and false otherwise.
 #[inline(always)]
-pub fn point_in_triangle(a: Vec2, b: Vec2, c: Vec2, p: Vec2, weight_a: &mut f32, weight_b: &mut f32, weight_c: &mut f32) -> bool {
+pub fn point_in_triangle(
+    a: Vec2,
+    b: Vec2,
+    c: Vec2,
+    p: Vec2,
+    weight_a: &mut f32,
+    weight_b: &mut f32,
+    weight_c: &mut f32,
+) -> bool {
     let e0 = (b - a).perp_dot(p - a);
     let e1 = (c - b).perp_dot(p - b);
     let e2 = (a - c).perp_dot(p - c);
@@ -93,25 +101,25 @@ pub fn floor_to_int(a: f32) -> i32 {
 /// Performs linear interpolation between two f32 values based on a parameter t, which is clamped between 0.0 and 1.0.
 #[inline(always)]
 pub fn lerp(a: f32, b: f32, t: f32) -> f32 {
-	a + (b - a) * t.clamp(0.0, 1.0)
+    a + (b - a) * t.clamp(0.0, 1.0)
 }
 
 /// Performs linear interpolation between two Vec2 values based on a parameter t, which is clamped between 0.0 and 1.0.
 #[inline(always)]
 pub fn lerp_float2(a: Vec2, b: Vec2, t: f32) -> Vec2 {
-	a + (b - a) * t.clamp(0.0, 1.0)
+    a + (b - a) * t.clamp(0.0, 1.0)
 }
 
 /// Performs linear interpolation between two Vec3 values based on a parameter t, which is clamped between 0.0 and 1.0.
 #[inline(always)]
 pub fn lerp_float3(a: Vec3, b: Vec3, t: f32) -> Vec3 {
-	a + (b - a) * t.clamp(0.0, 1.0)
+    a + (b - a) * t.clamp(0.0, 1.0)
 }
 
 /// Performs linear interpolation between two Vec4 values based on a parameter t, which is clamped between 0.0 and 1.0.
 #[inline(always)]
 pub fn lerp_float4(a: Vec4, b: Vec4, t: f32) -> Vec4 {
-	a + (b - a) * t.clamp(0.0, 1.0)
+    a + (b - a) * t.clamp(0.0, 1.0)
 }
 
 /// Maps a value from one range to another range using linear interpolation.

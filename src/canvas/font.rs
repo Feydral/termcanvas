@@ -35,10 +35,7 @@ impl Font {
                 continue;
             }
 
-            let ch = line
-                .chars()
-                .nth(1)
-                .expect("missing glyph char");
+            let ch = line.chars().nth(1).expect("missing glyph char");
 
             let mut bitmap = Vec::new();
 

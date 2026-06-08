@@ -1,5 +1,5 @@
-pub mod font;
 pub mod draw;
+pub mod font;
 
 use crossterm::terminal;
 use std::io::{Write, stdout};
@@ -28,12 +28,16 @@ impl Canvas {
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, color: u32) {
-        if x >= self.width || y >= self.height { return; }
+        if x >= self.width || y >= self.height {
+            return;
+        }
         self.pixels[y as usize * self.width as usize + x as usize] = color;
     }
 
     pub fn get_pixel(&self, x: u32, y: u32) -> u32 {
-        if x >= self.width || y >= self.height { return 0; }
+        if x >= self.width || y >= self.height {
+            return 0;
+        }
         self.pixels[y as usize * self.width as usize + x as usize]
     }
 
@@ -49,7 +53,8 @@ impl Canvas {
         let mut last_fg = 0;
         let mut last_bg = 0;
 
-        self.out.extend_from_slice(b"\x1b[38;2;0;0;0m\x1b[48;2;0;0;0m");
+        self.out
+            .extend_from_slice(b"\x1b[38;2;0;0;0m\x1b[48;2;0;0;0m");
 
         for row in 0..rows {
             let inv = rows - 1 - row;
@@ -61,11 +66,25 @@ impl Canvas {
                 let bg = self.get_pixel(x, y_bottom);
 
                 if fg != last_fg {
-                    write!(&mut self.out, "\x1b[38;2;{};{};{}m", (fg >> 24) as u8, (fg >> 16) as u8, (fg >> 8) as u8).unwrap();
+                    write!(
+                        &mut self.out,
+                        "\x1b[38;2;{};{};{}m",
+                        (fg >> 24) as u8,
+                        (fg >> 16) as u8,
+                        (fg >> 8) as u8
+                    )
+                    .unwrap();
                     last_fg = fg;
                 }
                 if bg != last_bg {
-                    write!(&mut self.out, "\x1b[48;2;{};{};{}m", (bg >> 24) as u8, (bg >> 16) as u8, (bg >> 8) as u8).unwrap();
+                    write!(
+                        &mut self.out,
+                        "\x1b[48;2;{};{};{}m",
+                        (bg >> 24) as u8,
+                        (bg >> 16) as u8,
+                        (bg >> 8) as u8
+                    )
+                    .unwrap();
                     last_bg = bg;
                 }
 
@@ -85,11 +104,16 @@ impl Canvas {
         self.pixels.clear();
         self.pixels.resize((new_width * new_height) as usize, 0);
         self.out.clear();
-        self.out.reserve(new_width as usize * (new_height / 2) as usize * 20);
+        self.out
+            .reserve(new_width as usize * (new_height / 2) as usize * 20);
     }
 
-    pub fn width(&self) -> u32 { self.width  }
-    pub fn height(&self) -> u32 { self.height }
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+    pub fn height(&self) -> u32 {
+        self.height
+    }
 
     pub fn terminal_width() -> u32 {
         terminal::size().expect("terminal::size()").0 as u32

@@ -39,25 +39,13 @@ impl<'a> DrawBuilder<'a> {
     }
 
     pub fn text(self, text: &str) {
-        self.canvas.draw_text(
-            text,
-            self.x,
-            self.y,
-            self.color,
-            self.align,
-            self.font,
-        );
+        self.canvas
+            .draw_text(text, self.x, self.y, self.color, self.align, self.font);
     }
 
     pub fn uint(self, value: u32) {
-        self.canvas.draw_uint(
-            value,
-            self.x,
-            self.y,
-            self.color,
-            self.align,
-            self.font,
-        );
+        self.canvas
+            .draw_uint(value, self.x, self.y, self.color, self.align, self.font);
     }
 
     pub fn int(self, value: i32, always_sign: bool) {
@@ -86,7 +74,10 @@ impl<'a> DrawBuilder<'a> {
     }
 }
 
-pub enum Align { Left, Right }
+pub enum Align {
+    Left,
+    Right,
+}
 
 impl Canvas {
     pub fn draw<'a>(&'a mut self, font: &'a Font) -> DrawBuilder<'a> {
@@ -116,28 +107,26 @@ impl Canvas {
                         let tab_w = (glyph_height * tab_size) as i32;
                         line_width += tab_w;
                     }
-                    '\\' => {
-                        match chars.peek() {
-                            Some('n') | Some('t') | Some('\\') => {
-                                let c2 = chars.next().unwrap();
-                                let actual = match c2 {
-                                    'n' => '\n',
-                                    't' => '\t',
-                                    '\\' => '\\',
-                                    _ => c2,
-                                };
+                    '\\' => match chars.peek() {
+                        Some('n') | Some('t') | Some('\\') => {
+                            let c2 = chars.next().unwrap();
+                            let actual = match c2 {
+                                'n' => '\n',
+                                't' => '\t',
+                                '\\' => '\\',
+                                _ => c2,
+                            };
 
-                                if let Some(g) = font.glyphs.get(&actual) {
-                                    line_width += g.len() as i32 / glyph_height as i32;
-                                }
-                            }
-                            _ => {
-                                if let Some(g) = font.glyphs.get(&'\\') {
-                                    line_width += g.len() as i32 / glyph_height as i32;
-                                }
+                            if let Some(g) = font.glyphs.get(&actual) {
+                                line_width += g.len() as i32 / glyph_height as i32;
                             }
                         }
-                    }
+                        _ => {
+                            if let Some(g) = font.glyphs.get(&'\\') {
+                                line_width += g.len() as i32 / glyph_height as i32;
+                            }
+                        }
+                    },
                     _ => {
                         if let Some(g) = font.glyphs.get(&c) {
                             line_width += g.len() as i32 / glyph_height as i32;
@@ -191,7 +180,14 @@ impl Canvas {
 
                         if let Some(g) = font.glyphs.get(&draw_char) {
                             let w = g.len() as i32 / glyph_height as i32;
-                            self.draw_character(draw_char, cursor_x as u32, cursor_y, color, Align::Left, font);
+                            self.draw_character(
+                                draw_char,
+                                cursor_x as u32,
+                                cursor_y,
+                                color,
+                                Align::Left,
+                                font,
+                            );
                             cursor_x += w;
                         }
                     }
@@ -199,7 +195,14 @@ impl Canvas {
                     _ => {
                         if let Some(g) = font.glyphs.get(&c) {
                             let w = g.len() as i32 / glyph_height as i32;
-                            self.draw_character(c, cursor_x as u32, cursor_y, color, Align::Left, font);
+                            self.draw_character(
+                                c,
+                                cursor_x as u32,
+                                cursor_y,
+                                color,
+                                Align::Left,
+                                font,
+                            );
                             cursor_x += w;
                         }
                     }
@@ -222,7 +225,7 @@ impl Canvas {
         let y = y as i32;
 
         let start_x = match align {
-            Align::Left  => x,
+            Align::Left => x,
             Align::Right => x - width,
         };
 
@@ -234,10 +237,7 @@ impl Canvas {
                     let dx = start_x + gx;
                     let dy = y + gy;
 
-                    if dx < 0 || dy < 0 ||
-                       dx >= self.width as i32 ||
-                       dy >= self.height as i32
-                    {
+                    if dx < 0 || dy < 0 || dx >= self.width as i32 || dy >= self.height as i32 {
                         continue;
                     }
 
@@ -260,7 +260,7 @@ impl Canvas {
         }
 
         let mut cursor_x = match align {
-            Align::Left  => x as i32,
+            Align::Left => x as i32,
             Align::Right => x as i32 - total_width,
         };
 
@@ -273,7 +273,16 @@ impl Canvas {
         }
     }
 
-    fn draw_int(&mut self, value: i32, x: u32, y: u32, color: u32, align: Align, font: &Font, always_show_sign: bool) {
+    fn draw_int(
+        &mut self,
+        value: i32,
+        x: u32,
+        y: u32,
+        color: u32,
+        align: Align,
+        font: &Font,
+        always_show_sign: bool,
+    ) {
         let glyph_height = font.glyph_height() as i32;
 
         let (sign_char, abs_val): (char, u32) = if value < 0 {
@@ -321,7 +330,17 @@ impl Canvas {
         }
     }
 
-    fn draw_float(&mut self, value: f32, x: u32, y: u32, color: u32, align: Align, font: &Font, decimals: usize, always_show_sign: bool) {
+    fn draw_float(
+        &mut self,
+        value: f32,
+        x: u32,
+        y: u32,
+        color: u32,
+        align: Align,
+        font: &Font,
+        decimals: usize,
+        always_show_sign: bool,
+    ) {
         let glyph_height = font.glyph_height() as i32;
 
         let mut s = format!("{:+.*}", decimals + 5, value);
