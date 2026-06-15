@@ -46,9 +46,9 @@ fn main() {
 
         for x in 0..canvas.width() {
             for y in 0..canvas.height() {
-                let scale = 0.003;
-                let warp_scale = 0.015;
-                let warp_strenght = 10.0;
+                let scale = 0.005;
+                let warp_scale = 0.008;
+                let warp_strenght = 80.0;
 
                 let wx = x as f32
                     + noise::get_simplex_2d(0, x as f32 * warp_scale, y as f32 * warp_scale)
@@ -58,7 +58,7 @@ fn main() {
                         * warp_strenght;
 
                 let color =
-                    (1.0 - noise::get_voronoi_edges_2d(2, wx * scale, wy * scale)).powi(50) * 255.0;
+                    (1.0 - noise::get_smooth_simplex_2d(2, wx * scale, wy * scale).abs()) * 255.0;
 
                 canvas.set_pixel(
                     x,
@@ -76,7 +76,7 @@ fn main() {
             .at(5, 5)
             .color(red)
             .align(Align::Left)
-            .text("Voronoi Noise Test");
+            .text("Warped Simplex Noise Test");
 
         let x = canvas.width().saturating_sub(5);
         let y = canvas.height().saturating_sub(13);
