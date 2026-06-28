@@ -15,7 +15,7 @@ loop {
     input.update().unwrap();
     if input.is_key_down(KeyCode::Esc) { break; }
 
-    canvas.clear();
+    canvas.clear(mathi::rgb_to_u32(0, 0, 0));
     canvas.set_pixel(10, 10, mathi::rgb_to_u32(255, 100, 0));
     canvas.draw(&font).at(20, 10).text("Hello!");
     canvas.render();
@@ -33,20 +33,19 @@ canvas.end();
 ## How it works
 
 Each terminal cell is rendered as two pixels stacked vertically, using the Unicode block character `▀` with an ANSI true-color foreground (top pixel) and background (bottom pixel). A terminal of 80×24 cells therefore gives a canvas of 80×48 pixels.
-
 To keep rendering fast, color escape codes are only emitted when the color actually changes compared to the previous cell. The entire frame is assembled into a single byte buffer and written in one call, wrapped in synchronized output (`?2026h/l`) to eliminate flickering.
 
 ## Usage
 
 ### Pixel rendering
 
-Colors are passed as `0xRRGGBBAA` packed `u32` values. You can construct them manually or use the included `mathi::rgb_to_u32` helper. Call `canvas.clear()` at the start of each frame to reset the buffer and `canvas.render()` at the end to flush it to the terminal. When the loop exits, call `canvas.end()` to restore the terminal to its original state (cursor visibility, alternate screen, etc.).
+Colors are passed as `0xRRGGBBAA` packed `u32` values. You can construct them manually or use the included `mathi::rgb_to_u32` helper. Call `canvas.clear(color)` at the start of each frame to reset the buffer and `canvas.render()` at the end to flush it to the terminal. When the loop exits, it is recommended to call `canvas.end()` to restore the terminal to its original state (cursor visibility, alternate screen, etc.).
 
 ```rust
 let mut canvas = Canvas::new();
 let mut input = Input::new();
 
-let red = mathi::rgb_to_u32(255, 0, );
+let red = mathi::rgb_to_u32(255, 0, 0);
 let green = mathi::rgb_to_u32(0, 255, 0);
 let blue = mathi::rgb_to_u32(0, 0, 255);
 
@@ -54,7 +53,7 @@ loop {
     input.update().unwrap();
     if input.is_key_down(KeyCode::Esc) { break; }
 
-    canvas.clear();
+    canvas.clear(mathi::rgb_to_u32(0, 0, 0));
 
     canvas.set_pixel(10, 10, red);
     canvas.set_pixel(11, 10, green);
@@ -93,7 +92,7 @@ canvas.draw(&font).at(10, 90).color(gray).text("delta:");
 canvas.draw(&font).at(10, 100).color(white).int(42, true); // always_show_sign: true -> "+42"
 ```
 
-**Alignment** is set with `.align(Align::Left)` (default) or `.align(Align::Right)`. With `Align::Left`, the `x`/`y` coordinates mark the top-left corner of the text. With `Align::Right`, they mark the top-right corner — useful for right-aligning numbers at a fixed column without calculating their width yourself.
+**Alignment** is set with `.align(Align::Left)` (default), `.align(Align::Right)` or `.align(Align::Middle)`. With `Align::Left`, the `x`/`y` coordinates mark the top-left corner of the text. With `Align::Right`, they mark the top-right corner — useful for right-aligning numbers at a fixed column without calculating their width yourself. With `Align::Middle`, `x`/`y` mark the top-center — useful for centering headings or labels, for example at `width / 2` to center across the full canvas.
 
 ### Input
 
