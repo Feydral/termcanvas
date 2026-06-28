@@ -1,8 +1,6 @@
 #![allow(dead_code)]
-use crossterm::event::{
-    self, Event, KeyCode, KeyEvent, KeyEventKind,
-    PopKeyboardEnhancementFlags,
-};
+
+use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, PopKeyboardEnhancementFlags};
 use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode};
 use std::collections::HashSet;

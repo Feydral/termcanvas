@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 pub mod draw;
 pub mod font;
 
@@ -11,7 +13,6 @@ pub struct Canvas {
     out: Vec<u8>,
 }
 
-#[allow(dead_code)]
 impl Canvas {
     pub fn new() -> Self {
         let (w, h_half) = terminal::size().unwrap();
@@ -41,8 +42,8 @@ impl Canvas {
         self.pixels[y as usize * self.width as usize + x as usize]
     }
 
-    pub fn clear(&mut self) {
-        self.pixels.fill(0);
+    pub fn clear(&mut self, color: u32) {
+        self.pixels.fill(color);
     }
 
     pub fn render(&mut self) {

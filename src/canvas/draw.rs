@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::canvas::{Canvas, font::Font};
 
 pub struct DrawBuilder<'a> {
@@ -10,7 +12,6 @@ pub struct DrawBuilder<'a> {
     align: Align,
 }
 
-#[allow(dead_code)]
 impl<'a> DrawBuilder<'a> {
     pub fn at(mut self, x: u32, y: u32) -> Self {
         self.x = x;
@@ -83,6 +84,7 @@ impl<'a> DrawBuilder<'a> {
 pub enum Align {
     Left,
     Right,
+    Middle,
 }
 
 impl Canvas {
@@ -144,6 +146,7 @@ impl Canvas {
             let mut cursor_x = match align {
                 Align::Left => x as i32,
                 Align::Right => x as i32 - line_width,
+                Align::Middle => x as i32 - line_width / 2,
             };
 
             let mut chars = line.chars().peekable();
@@ -232,7 +235,8 @@ impl Canvas {
 
         let start_x = match align {
             Align::Left => x,
-            Align::Right => x - width,
+            Align::Right => x as i32 - width,
+            Align::Middle => x as i32 - width / 2, // neu
         };
 
         for gy in 0..height {
@@ -268,6 +272,7 @@ impl Canvas {
         let mut cursor_x = match align {
             Align::Left => x as i32,
             Align::Right => x as i32 - total_width,
+            Align::Middle => x as i32 - total_width / 2,
         };
 
         for &c in &digits {
@@ -317,6 +322,7 @@ impl Canvas {
         let mut cursor_x = match align {
             Align::Left => x as i32,
             Align::Right => x as i32 - total_width,
+            Align::Middle => x as i32 - total_width / 2,
         };
 
         if show_sign {
@@ -374,6 +380,7 @@ impl Canvas {
         let mut cursor_x = match align {
             Align::Left => x as i32,
             Align::Right => x as i32 - total_width,
+            Align::Middle => x as i32 - total_width / 2,
         };
 
         for &c in &chars {

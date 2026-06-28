@@ -46,37 +46,40 @@ fn main() {
             fps = (1.0 / dt) as u32;
         }
 
-        canvas.clear();
+        canvas.clear(mathi::rgb_to_u32(12, 12, 12));
 
         let blue = mathi::rgb_to_u32(127, 127, 255);
         let red = mathi::rgb_to_u32(255, 127, 127);
 
+        let width = canvas.width();
+        let height = canvas.height();
+
         canvas
             .draw(&bold_font)
-            .at(5, 5)
+            .at(width / 2, 5)
             .color(blue)
-            .align(Align::Left)
+            .align(Align::Middle)
             .text(&('A'..'Z').collect::<String>());
 
         canvas
             .draw(&bold_font)
-            .at(5, 15)
+            .at(width / 2, 15)
             .color(blue)
-            .align(Align::Left)
+            .align(Align::Middle)
             .text(&('a'..'z').collect::<String>());
 
         canvas
             .draw(&bold_font)
-            .at(5, 25)
+            .at(width / 2, 25)
             .color(blue)
-            .align(Align::Left)
+            .align(Align::Middle)
             .text(&('0'..='9').collect::<String>());
 
         canvas
             .draw(&bold_font)
-            .at(5, 35)
+            .at(width / 2, 35)
             .color(blue)
-            .align(Align::Left)
+            .align(Align::Middle)
             .text(".,:;_-+*#\'\"!?()<>{}[]%&/\\=|");
 
         canvas
@@ -106,9 +109,6 @@ fn main() {
             .color(red)
             .align(Align::Left)
             .text(".,:;_-+*#\'\"!?()<>{}[]%&/\\=|");
-
-        let width = canvas.width();
-        let height = canvas.height();
 
         canvas
             .draw(&font)
