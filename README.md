@@ -6,6 +6,13 @@ A lightweight Rust library for rendering pixels directly in the terminal. Colors
 
 ## Quickstart
 
+Import it with:
+
+```bash
+cargo add termcanvas
+```
+
+Then import everything you'll probably need with the prelude:
 ```rust
 use termcanvas::prelude::*;
 use crossterm::event::KeyCode;
