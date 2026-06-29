@@ -7,6 +7,9 @@ A lightweight Rust library for rendering pixels directly in the terminal. Colors
 ## Quickstart
 
 ```rust
+use termcanvas::prelude::*;
+use crossterm::event::KeyCode;
+
 let mut canvas = Canvas::new();
 let mut input = Input::new();
 let font = Font::load_from_file("assets/default.tcfont");
@@ -42,6 +45,9 @@ To keep rendering fast, color escape codes are only emitted when the color actua
 Colors are passed as `0xRRGGBBAA` packed `u32` values. You can construct them manually or use the included `mathi::rgb_to_u32` helper. Call `canvas.clear(color)` at the start of each frame to reset the buffer and `canvas.render()` at the end to flush it to the terminal. When the loop exits, it is recommended to call `canvas.end()` to restore the terminal to its original state (cursor visibility, alternate screen, etc.).
 
 ```rust
+use termcanvas::prelude::*;
+use crossterm::event::KeyCode;
+
 let mut canvas = Canvas::new();
 let mut input = Input::new();
 
@@ -74,6 +80,8 @@ Two bitmap fonts are included and ready to use — `default` and `default_bold`.
 Text is drawn with `.text()`. For numbers, use `.uint()`, `.int()`, or `.float()` to render values directly without formatting them yourself.
 
 ```rust
+use termcanvas::prelude::*;
+
 let font = Font::load_from_file("assets/default.tcfont");
 let font_bold = Font::load_from_file("assets/default_bold.tcfont");
 
@@ -124,7 +132,8 @@ if input.is_key_up(KeyCode::Space) {
 
 ```
 src/
-  main.rs          # Demo: font specimen, live FPS and canvas size display
+  lib.rs
+  prelude.rs
   canvas.rs        # Canvas: pixel buffer, frame render, terminal resize
   canvas/
     draw.rs        # DrawBuilder fluent API, text and number rendering

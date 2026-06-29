@@ -1,6 +1,6 @@
 [package]
 name = "termcanvas"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "A lightweight Rust library for rendering pixels directly in the terminal."
 license = "MIT"
