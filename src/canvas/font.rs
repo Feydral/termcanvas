@@ -29,11 +29,11 @@ impl Font {
         font
     }
 
-    pub fn default_font() -> Self {
+    pub fn load_default() -> Self {
         Self::load_from_str(include_str!("../../assets/default.tcfont"))
     }
 
-    pub fn default_bold_font() -> Self {
+    pub fn load_default_bold() -> Self {
         Self::load_from_str(include_str!("../../assets/default_bold.tcfont"))
     }
 
